@@ -1,14 +1,14 @@
 <template>
   <div class="home">
       <div>
-          <input type="text"> <button>Add</button>
+          <input type="text" v-model="newTodo"> <button @click="addTodo">Add</button>
       </div>
       <ul>
           <li v-for="oneTodo in list" :key="oneTodo.id">
                 <div>
                     <input type="checkbox" v-model="oneTodo.status" :id="oneTodo.id">
                     <label :for="oneTodo.id">{{oneTodo.text}}</label>
-                    <button>delete</button>
+                    <button @click="deleteTodo(oneTodo.id)">delete</button>
                 </div>
           </li>
       </ul>
@@ -20,6 +20,7 @@ export default {
     name: 'Home',
     data () {
         return {
+            newTodo: '', // 新增代辦輸入框的值
             /**
              * list.id: todo message id
              * list.text: 標題內容
@@ -46,7 +47,17 @@ export default {
     methods: {
         // 新增代辦
         addTodo () {
+            const id = this.list.length + 1
 
+            // todo 加入列表
+            this.list.push({
+                id,
+                status: false,
+                text: this.newTodo
+            })
+
+            // 重置輸入框
+            this.newTodo = ''
         },
         // 刪除指定代辦
         deleteTodo () {
