@@ -4,7 +4,7 @@
           <input type="text" v-model="newTodo"> <button @click="addTodo">Add</button>
       </div>
       <ul>
-          <li v-for="oneTodo in list" :key="oneTodo.id">
+          <li v-for="oneTodo in getFilterList" :key="oneTodo.id">
                 <div>
                     <input type="checkbox" v-model="oneTodo.status" :id="oneTodo.id">
                     <label :for="oneTodo.id">{{oneTodo.text}}</label>
@@ -28,12 +28,12 @@ export default {
              */
             list: [{
                 id: 1,
-                text: 'my todo',
+                text: 'my todo 1',
                 status: false
             },
             {
                 id: 2,
-                text: 'my todo',
+                text: 'my todo 2',
                 status: true
             }]
         }
@@ -41,7 +41,15 @@ export default {
     computed: {
         // 取得過濾後的代辦清單
         getFilterList () {
-            return this.list || []
+            const { status = 2 } = this.$route.params
+
+            // 全選
+            if (+status > 1) {
+                return this.list || []
+            }
+
+            // 過濾狀態
+            return this.list.filter(({ status: listStatus }) => +listStatus === +status)
         }
     },
     methods: {
@@ -73,8 +81,9 @@ export default {
             this.list.splice(targetIdx, 1)
         },
         // 更新指定代辦
-        updateTodo () {
-
+        updateTodo (TodoID) {
+            const target = this.list.find(({ id }) => id === TodoID)
+            target.status = !target.status
         }
     }
 }
