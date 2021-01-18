@@ -49,6 +49,11 @@ export default {
         addTodo () {
             const id = this.list.length + 1
 
+            // 防呆: 輸入框為空值時擋送出
+            if (this.newTodo === '') {
+                return
+            }
+
             // todo 加入列表
             this.list.push({
                 id,
