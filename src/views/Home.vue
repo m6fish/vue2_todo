@@ -22,7 +22,7 @@ export default {
         return {
             newTodo: '', // 新增代辦輸入框的值
             /**
-             * list.id: todo message id
+             * list.id: todo id
              * list.text: 標題內容
              * list.status: { false: 未完成, true: 完成 }
              */
@@ -59,9 +59,13 @@ export default {
             // 重置輸入框
             this.newTodo = ''
         },
-        // 刪除指定代辦
-        deleteTodo () {
-
+        /**
+         * 刪除指定代辦
+         * @param {Number} TodoID todo id
+         */
+        deleteTodo (TodoID) {
+            const targetIdx = this.list.findIndex(({ id }) => id === TodoID)
+            this.list.splice(targetIdx, 1)
         },
         // 更新指定代辦
         updateTodo () {
