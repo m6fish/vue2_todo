@@ -4,10 +4,10 @@
           <input type="text"> <button>Add</button>
       </div>
       <ul>
-          <li>
+          <li v-for="oneTodo in list" :key="oneTodo.id">
                 <div>
-                    <input type="checkbox">
-                    <label>456</label>
+                    <input type="checkbox" v-model="oneTodo.status" :id="oneTodo.id">
+                    <label :for="oneTodo.id">{{oneTodo.text}}</label>
                     <button>delete</button>
                 </div>
           </li>
@@ -20,17 +20,27 @@ export default {
     name: 'Home',
     data () {
         return {
+            /**
+             * list.id: todo message id
+             * list.text: 標題內容
+             * list.status: { false: 未完成, true: 完成 }
+             */
             list: [{
                 id: 1,
                 text: 'my todo',
-                status: 1
+                status: false
+            },
+            {
+                id: 2,
+                text: 'my todo',
+                status: true
             }]
         }
     },
     computed: {
         // 取得過濾後的代辦清單
         getFilterList () {
-            return []
+            return this.list || []
         }
     },
     methods: {
