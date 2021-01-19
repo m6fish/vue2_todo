@@ -4,11 +4,14 @@
           <input type="text" v-model="newTodo"> <button @click="addTodo">Add</button>
       </div>
       <ul>
-          <li v-for="oneTodo in getFilterList" :key="oneTodo.id">
+          <li v-for="{id, status, text} in getFilterList" :key="id">
                 <div>
-                    <input type="checkbox" v-model="oneTodo.status" :id="oneTodo.id">
-                    <label :for="oneTodo.id">{{oneTodo.text}}</label>
-                    <button @click="deleteTodo(oneTodo.id)">delete</button>
+                    <input type="checkbox"
+                        :value="status"
+                        @input="updateTodo($event, id)"
+                        :id="id">
+                    <label :for="id">{{text}}</label>
+                    <button @click="deleteTodo(id)">delete</button>
                 </div>
           </li>
       </ul>
@@ -22,13 +25,7 @@ export default {
     name: 'Home',
     data () {
         return {
-            newTodo: '', // 新增代辦輸入框的值
-            /**
-             * list.id: todo id
-             * list.text: 標題內容
-             * list.status: { false: 未完成, true: 完成 }
-             */
-            list: []
+            newTodo: '' // 新增代辦輸入框的值
         }
     },
     computed: {
@@ -83,9 +80,8 @@ export default {
             this.A_deleteTodo(targetIdx)
         },
         // 更新指定代辦
-        updateTodo (TodoID) {
-            const target = this.getTodoList.find(({ id }) => id === TodoID)
-            // target.status = !target.status
+        updateTodo (event, TodoID) {
+            this.A_updateTodo(TodoID)
         }
     }
 }
