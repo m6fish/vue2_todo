@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     name: 'Home',
     data () {
@@ -26,64 +28,64 @@ export default {
              * list.text: 標題內容
              * list.status: { false: 未完成, true: 完成 }
              */
-            list: [{
-                id: 1,
-                text: 'my todo 1',
-                status: false
-            },
-            {
-                id: 2,
-                text: 'my todo 2',
-                status: true
-            }]
+            list: []
         }
     },
     computed: {
+        ...mapGetters([
+            'getTodoList'
+        ]),
         // 取得過濾後的代辦清單
         getFilterList () {
             const { status = 2 } = this.$route.params
 
             // 全選
             if (+status > 1) {
-                return this.list || []
+                return this.getTodoList || []
             }
 
             // 過濾狀態
-            return this.list.filter(({ status: listStatus }) => +listStatus === +status)
+            return this.getTodoList.filter(({ status: listStatus }) => +listStatus === +status)
         }
     },
     methods: {
+        ...mapActions([
+            'A_addTodo',
+            'A_deleteTodo',
+            'A_updateTodo'
+        ]),
         // 新增代辦
         addTodo () {
-            const id = this.list.length + 1
+            const id = this.getTodoList.length + 1
 
             // 防呆: 輸入框為空值時擋送出
             if (this.newTodo === '') {
                 return
             }
 
+            // 重置輸入框
+            const text = this.newTodo
+            this.newTodo = ''
+
             // todo 加入列表
-            this.list.push({
+            this.A_addTodo({
                 id,
                 status: false,
-                text: this.newTodo
+                text
             })
-
-            // 重置輸入框
-            this.newTodo = ''
         },
         /**
          * 刪除指定代辦
          * @param {Number} TodoID todo id
          */
         deleteTodo (TodoID) {
-            const targetIdx = this.list.findIndex(({ id }) => id === TodoID)
-            this.list.splice(targetIdx, 1)
+            const targetIdx = this.getTodoList.findIndex(({ id }) => id === TodoID)
+            this.A_deleteTodo(targetIdx)
         },
         // 更新指定代辦
         updateTodo (TodoID) {
-            const target = this.list.find(({ id }) => id === TodoID)
-            target.status = !target.status
+            const target = this.getTodoList.find(({ id }) => id === TodoID)
+            // target.status = !target.status
         }
     }
 }
