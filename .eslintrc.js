@@ -14,6 +14,9 @@ module.exports = {
     plugins: [
         'vue'
     ],
+    globals: {
+        _M: true
+    },
     rules: {
         indent: ['error', 4]
     }
